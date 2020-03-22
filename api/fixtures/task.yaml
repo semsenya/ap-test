@@ -1,0 +1,6 @@
+App\Entity\Task:
+    task_{1..20}:
+        name: <sentence(2)>
+        description: <text()>
+        createdAt: <dateTimeBetween('2020-01-01', '2020-03-22')>
+        completed: <boolean(50)>
