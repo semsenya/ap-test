@@ -40,3 +40,15 @@ services:
         # implications!
         decoration_priority: -20
         arguments: ['@App\ApiPlatform\AutoGroupResourceMetadataFactory.inner']
+
+    App\Serializer\Normalizer\TaskNormalizer:
+        arguments: [ '@security.helper' ]
+        tags:
+            - { name: 'serializer.normalizer', priority: 64 }
+    
+    App\Doctrine\TaskSetOwnerListener:
+        tags: 
+            - # these are the basic options that define the entity listener
+              name: 'doctrine.orm.entity_listener'
+              event: 'prePersist'
+              entity: 'App\Entity\Task'

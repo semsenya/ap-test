@@ -6,6 +6,7 @@ namespace App\Tests;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\Client;
 use App\Entity\User;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 
 class CustomApiTestCase extends ApiTestCase
@@ -26,7 +27,6 @@ class CustomApiTestCase extends ApiTestCase
     protected function getToken(Client $client, string $email, string $password) :string
     {
         $response = $client->request('POST', '/authentication_token', [
-            'headers' => ['Content-Type' => 'application/json'],
             'json' => [
                 'email' => $email,
                 'password' => $password
@@ -49,10 +49,20 @@ class CustomApiTestCase extends ApiTestCase
         return self::$container->get(EntityManagerInterface::class);
     }
 
-    protected function login(): string
+    protected function loginUser1()
+    {
+        return $this->login('user1@example.com');
+    }
+
+    protected function loginUser2()
+    {
+        return $this->login('user2@example.com');
+    }
+
+    private function login(string $email): string
     {
         $response = static::createClient()->request('POST', '/authentication_token', ['json' => [
-            'email' => 'user@example.com',
+            'email' => $email,
             'password' => 'test',
         ]]);
 

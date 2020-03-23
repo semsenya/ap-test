@@ -5,6 +5,9 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -68,6 +71,16 @@ class User implements UserInterface
      * @Assert\NotBlank(groups={"create"})
      */
     private $plainPassword;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Task", mappedBy="owner", orphanRemoval=true)
+     */
+    private $tasks;
+
+    public function __construct()
+    {
+        $this->tasks = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -155,6 +168,50 @@ class User implements UserInterface
     public function setPlainPassword(string $plainPassword): self
     {
         $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Task[]
+     */
+    public function getTasks(): Collection
+    {
+        return $this->tasks;
+    }
+
+    /**
+     * @return Collection|Task[]
+     * @Groups("user:read")
+     * @SerializedName("tasks")
+     */
+    public function getMyTasks(): Collection
+    {
+        $criteria = Criteria::create()
+            ->andWhere(Criteria::expr()->eq('owner', $this))
+        ;
+        return $this->tasks->matching($criteria);
+    }
+
+    public function addTask(Task $task): self
+    {
+        if (!$this->tasks->contains($task)) {
+            $this->tasks[] = $task;
+            $task->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTask(Task $task): self
+    {
+        if ($this->tasks->contains($task)) {
+            $this->tasks->removeElement($task);
+            // set the owning side to null (unless already changed)
+            if ($task->getOwner() === $this) {
+                $task->setOwner(null);
+            }
+        }
 
         return $this;
     }
