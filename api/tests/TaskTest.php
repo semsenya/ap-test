@@ -4,18 +4,25 @@
 namespace App\Tests;
 
 
-use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Task;
 use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
 
-class TaskTest extends ApiTestCase
+class TaskTest extends CustomApiTestCase
 {
     use RefreshDatabaseTrait;
 
     public function testGetCollection(): void
     {
-        // The client implements Symfony HttpClient's `HttpClientInterface`, and the response `ResponseInterface`
-        $response = static::createClient()->request('GET', '/tasks');
+        $client = static::createClient();
+        $response = $client->request('GET', '/tasks');
+        $this->assertResponseStatusCodeSame(401);
+
+        $client = static::createClient();
+        $token = $this->login();
+        $client = static::createClient();
+        $response = $client->request('GET', '/tasks', [
+            'auth_bearer' => $token
+        ]);
 
         $this->assertResponseIsSuccessful();
         // Asserts that the returned content type is JSON-LD (the default)
