@@ -1,0 +1,11 @@
+App\Entity\User:
+    admin:
+        email: admin@example.com
+        password: '\$argon2id\$v=19\$m=65536,t=4,p=1\$j8gPpyBgXxb7jStk847EkA\$GuE/VNtULFtvjnnmn7dFYRP9iWIQKUOVFt3121lOPpI' # test
+        roles: [ROLE_ADMIN]
+    user1:
+        email: user1@example.com
+        password: '\$argon2id\$v=19\$m=65536,t=4,p=1\$j8gPpyBgXxb7jStk847EkA\$GuE/VNtULFtvjnnmn7dFYRP9iWIQKUOVFt3121lOPpI' # test
+    user2:
+        email: user2@example.com
+        password: '\$argon2id\$v=19\$m=65536,t=4,p=1\$j8gPpyBgXxb7jStk847EkA\$GuE/VNtULFtvjnnmn7dFYRP9iWIQKUOVFt3121lOPpI' # test

@@ -1,0 +1,19 @@
+App\Entity\Task:
+    task_{1..5}:
+        name: 'task_<($current)>'
+        description: <text()>
+        createdAt: <dateTimeBetween('2020-01-01', '2020-03-22')>
+        completed: true
+        owner: '@user1'
+    task_{6..10}:
+        name: 'task_<($current)>'
+        description: <text()>
+        createdAt: <dateTimeBetween('2020-01-01', '2020-03-22')>
+        completed: false
+        owner: '@user1'
+    task_{11..20}:
+        name: <sentence(2)>
+        description: <text()>
+        createdAt: <dateTimeBetween('2020-01-01', '2020-03-22')>
+        completed: <boolean(50)>
+        owner: '@user2'
